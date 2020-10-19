@@ -8,23 +8,20 @@ library(flowCore)
 library(CATALYST)
 
 # Specify directories
-file_paths <- list(paste0(getwd(),"/fcs/"))
+file_paths <- list(paste0(getwd(),"/fcs_files/"))
 # Name file_paths
 names(file_paths) <- file_paths
-
 
 # Search for all files in the specified directories and extract files by a given extension
 files_list            <- lapply(file_paths, list.files, recursive=T)
 files_by_ext          <- lapply(files_list, function(x){x[endsWith(x, suffix=".fcs")]} )
-
-# Exclude particular files from loading
-# files_by_ext  <- lapply(files_by_ext, function(x) { x[grep("FSP|H2afy|Il7rko|WT",x, invert=T)] } )
 
 # Get complete paths to all files
 all_file_paths        <- unlist(lapply(seq_along(files_by_ext), function(x) {  paste(names(files_by_ext[x]), files_by_ext[[x]], sep="") } ))
 names(all_file_paths) <- lapply(strsplit(all_file_paths,split="/"), function(x) { sub(".fcs","",x[length(x)]) } )
 file_names <- unname(unlist(lapply(strsplit(unlist(files_by_ext),split = "/"),tail,1)))
 
+# Read all the FCS files present in the folder fcs/
 data_list <- list()
 fcs.par <- list()
 for (i in c(1:length(file_names))) {
